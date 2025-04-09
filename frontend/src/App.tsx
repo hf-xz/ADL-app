@@ -8,19 +8,6 @@ import './App.css'
 
 enum Status { idle, submitting, success, error }
 
-function SubmitButton(props: {status: Status}) {
-  let status = props.status
-  if (status !== Status.submitting) return (
-    <Button> Get Score </Button>
-  )
-  else return (
-    <Button disabled>
-      <Loader2 className="animate-spin" />
-      Please wait
-    </Button>
-  )
-}
-
 function App() {
   const [review, setReview] = useState<string>('')
   const [score, setScore] = useState<number>(0)
@@ -67,14 +54,27 @@ function App() {
           placeholder="Input your review here"
           disabled={status === Status.submitting}
         />
-        <SubmitButton status={status} />
+        <Button
+          disabled={status === Status.submitting}
+          className="w-30"
+        >
+          {status !== Status.submitting ?
+            <> Get Score </>
+            :
+            <> <Loader2 className="animate-spin" /> Please wait </>
+          }
+        </Button>
       </form>
 
-      { status === Status.success && (
-        <p className="text-base font-mono">Your score is: {score}</p>
+      {status === Status.submitting && (
+        <p className="text-base font-mono">Caculating your score...</p>
       )}
 
-      { status === Status.error && (
+      {status === Status.success && (
+        <p className="text-base font-mono">Your score is: {score.toFixed(2)}</p>
+      )}
+
+      {status === Status.error && (
         <div className="text-base font-mono">
           <p className="text-red-400 font-bold">Oops, something went wrong.</p>
           {error}
