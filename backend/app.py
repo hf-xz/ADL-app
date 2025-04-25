@@ -1,5 +1,5 @@
 from flask import Flask, request
-from random import random
+from run_model import predict_review_scores
 
 app = Flask(__name__)
 
@@ -10,4 +10,7 @@ def score():
 
     print(f'get review: {review}')
 
-    return {'score': random() * 9 + 1}
+    # Use the predict_review_scores function to get the score
+    scores = predict_review_scores([review])
+
+    return {"score": scores[0]}
